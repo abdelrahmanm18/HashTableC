@@ -16,6 +16,12 @@ hashtable createHashTable(){
    newHashTable.initialCapacity = 100;
    newHashTable.capacity = newHashTable.initialCapacity;
    newHashTable.items = malloc(sizeof(int) * 100);
+
+   if(newHashTable.items == NULL){
+    printf("Memory allocation failed\n");
+    exit(1);
+   }
+   
    return newHashTable;
 }
 
