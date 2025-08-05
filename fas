@@ -1,0 +1,36 @@
+[33mcommit ab922050b17fc6d5076cc51f5a8f5e9d9df869e0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: abdelrahmanm18 <abdelrahmanxxzz@gmail.com>
+Date:   Tue Aug 5 02:54:58 2025 +0300
+
+    changing the structure of the hashtable so it can accept different generic types with different hashing functions
+
+[33mcommit 7f9c6ab4d2ca2d34ca38c68cc37ea7704a804dad[m
+Merge: 626d6e0 b346627
+Author: abdelrahmanm18 <abdelrahmanxxzz@gmail.com>
+Date:   Mon Aug 4 23:21:00 2025 +0300
+
+    Merge branch 'main' of https://github.com/abdelrahmanm18/HashTableC
+
+[33mcommit 626d6e09e7b92cb432521ea0017ffb91ac6c8fb8[m
+Author: abdelrahmanm18 <abdelrahmanxxzz@gmail.com>
+Date:   Mon Aug 4 23:18:19 2025 +0300
+
+    adding error checking for memory allocation
+
+[33mcommit b346627bf62a8b535eb59899718631e5b78a6afb[m
+Author: Abdelrahman Mohamed <abdelrahmanxxzz@gmail.com>
+Date:   Mon Aug 4 23:02:56 2025 +0300
+
+    Update README.md
+
+[33mcommit 98f9edee6fea7973c0d2debf78734e162c5a3ac2[m
+Author: abdelrahmanm18 <abdelrahmanxxzz@gmail.com>
+Date:   Mon Aug 4 22:57:45 2025 +0300
+
+    first commit
+
+[33mcommit 913f4016d25b687990a70affcadb05989fb74424[m
+Author: abdelrahmanm18 <abdelrahmanxxzz@gmail.com>
+Date:   Mon Aug 4 22:38:55 2025 +0300
+
+    initial commit && simple hashtable structure with basic operations like put, get
