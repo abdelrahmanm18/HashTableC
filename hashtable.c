@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef int (*HashFunction) (void* key, int capacity);
+typedef int (*ComapreFunction) (void* a, void* b);
 
 typedef struct{
     void* key;
@@ -9,24 +11,24 @@ typedef struct{
     ht_item* next;
 }ht_item;
 
-typedef int (*HashFunction) (void* key, int capacity);
 
 
 typedef struct
 {   
-    //items here is a pointer to an array of pointers
+    //buckets here is a pointer to an array of pointers
     //Each of those pointers points to a ht_item struct
 
     /*
-    items ──►  ptr ──► ht_item { key: "eg", value: "egypt" }
+    buckets ──►  ptr ──► ht_item { key: "eg", value: "egypt" }
                ptr ──► ht_item { key: "fr", value: "france" }
                ptr ──► NULL
     */
-    ht_item** items;       
+    ht_item** buckets;       
     int initialCapacity;
     int capacity;
     int size;
     HashFunction hashfunction;
+    ComapreFunction comparefunction;
 }hashtable;
 
 
@@ -35,21 +37,23 @@ typedef struct
 
 
 
-hashtable createHashTable(HashFunction hashfunction){
+hashtable createHashTable(HashFunction hashfunction, ComapreFunction comparefunction){
    hashtable table;
    table.size = 0;
    table.initialCapacity = 100;
    table.capacity = table.initialCapacity;
-   table.items = malloc(sizeof(ht_item*) * table.initialCapacity);
+   table.buckets = malloc(sizeof(ht_item*) * table.initialCapacity);
    table.hashfunction = hashfunction;
 
-   if(table.items == NULL){
+   if(table.buckets == NULL){
     printf("Memory allocation failed\n");
     exit(1);
    }
 
    return table;
 }
+
+//helper methods for hashing and comparing keys
 
 int stringHash(void* key, int capacity){
     int hash = 0;
@@ -67,38 +71,41 @@ int intHash(void* key, int capacity){
     return k % capacity;
 }
 
-int compare_keys(void* a, void* b){
+int intCompare(void* a, void* b){
+    return *(int*)a != *(int*)b;
+}
 
+int stringCompare(void* a, void* b){
+    return strcmp((char*) a, (char*)b);
 }
 
 
 void put(hashtable* table, void* key, void* value){
     int index = table->hashfunction(key , table->capacity);
-    ht_item* current = table->items[index];
+    ht_item* current = table->buckets[index];
     while(current != NULL){
-        if(current->key == key){
+        if(table->comparefunction(current->key,key) == 0){
             current->value = value;
             return;
         }
-
         current = current->next;
     }
 
     ht_item* item = malloc(sizeof(ht_item));
     item->key = key;
     item->value = value;
-    item->next = table->items[index];
-    table->items[index] = item;
+    item->next = table->buckets[index];
+    table->buckets[index] = item;
     table->size++;
 }
 
 
 void* get(hashtable* table, void* key){
     int index = table->hashfunction(key, table->capacity);
-    if(table->items[index] == NULL){
+    if(table->buckets[index] == NULL){
         return NULL;
     }
-    return table->items[index]->value;
+    return table->buckets[index]->value;
 }
 
 void* getOrDefault(hashtable* table, void* key, void* defaultValue){
@@ -113,13 +120,13 @@ int size(hashtable* table){
 
 void clear(hashtable* table){
     for(int i = 0; i < table->capacity; i++){
-        if(table->items[i] != NULL){
-            free(table->items[i]);
+        if(table->buckets[i] != NULL){
+            free(table->buckets[i]);
         }
     }
 
-    free(table->items);
-    table->items = NULL;
+    free(table->buckets);
+    table->buckets = NULL;
     table->size = 0;
     table->capacity = 0;
     table->initialCapacity = 100;
@@ -127,7 +134,7 @@ void clear(hashtable* table){
 }
 
 int main() {
-    hashtable table = createHashTable(stringHash);
+    hashtable table = createHashTable(stringHash, stringCompare);
     int value = 10;
     put(&table, "king", &value);
     int* res = get(&table, "zeko");
